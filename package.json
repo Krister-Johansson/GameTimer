@@ -7,7 +7,8 @@
   "author": "Krister Johansson <krister.johansson86@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "start": "electron ./src/index.js"
+    "start": "electron ./src/index.js",
+    "dev": "node ./src/server"
   },
   "devDependencies": {
     "electron": "^6.0.7",
@@ -19,6 +20,10 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-session": "^1.16.2"
+    "express-session": "^1.16.2",
+    "lowdb": "^1.0.0",
+    "pouchdb": "^7.1.1",
+    "react-router-dom": "^5.0.1",
+    "uuid": "^3.3.3"
   }
 }
