@@ -11,9 +11,7 @@ const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
 
-require('dotenv').config()
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+sgMail.setApiKey('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')
 
 const app = express()
 const server = http.createServer(app)
@@ -25,7 +23,7 @@ wss.on('connection', ws => {
     })
 })
 
-mongoose.connect(process.env.database, {
+mongoose.connect('mongodb://localhost:27017/gametimer', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
