@@ -17,13 +17,21 @@
     "eslint-plugin-prettier": "^3.1.0"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
+    "boom": "^7.3.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "exceljs": "^2.0.1",
     "express": "^4.17.1",
+    "express-boom": "^3.0.0",
     "express-session": "^1.16.2",
     "lowdb": "^1.0.0",
+    "mongoose": "^5.6.13",
     "pouchdb": "^7.1.1",
     "react-router-dom": "^5.0.1",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "validator": "^11.1.0",
+    "ws": "^7.1.2"
   }
 }

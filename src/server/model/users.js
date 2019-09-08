@@ -1,42 +1,36 @@
-const db = require('../util/db')
-const uuid = require('uuid')
+let mongoose = require('mongoose')
+let validator = require('validator')
 
-// Set some defaults (required if your JSON file is empty)
-
-// var top10 = data.sort(function(a, b) { return a.Variable1 < b.Variable1 ? 1 : -1; })
-//             .slice(0, 10);
-
-
-
-const users = {
-    list() {
-        return new Promise((resolve, reject) => {
-            db('user').then(resolve).catch(reject)
-        })
+let userSchema = new mongoose.Schema(
+    {
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            validate: value => {
+                return validator.isEmail(value)
+            },
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        phone: {
+            type: String,
+            validate: value => {
+                return validator.isMobilePhone(value)
+            },
+        },
+        time: {
+            type: Number,
+        },
+        company: {
+            type: String,
+            required: true,
+        },
     },
-    get(id) {
-        return new Promise((resolve, reject) => {
-            db.get('posts')
-                .find({ id })
-                .then(resolve)
-                .catch(reject)
-        })
-    },
-    create(name, email, phone, company) {
-        return new Promise((resolve, reject) => {
-            db.put({
-                id: uuid.v4(),
-                avatar: null,
-                name,
-                time: null,
-                email,
-                phone,
-                company,
-            })
-                .then(resolve)
-                .catch(reject)
-        })
-    },
-}
+    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
+)
 
-module.exports = users
+module.exports = mongoose.model('User', userSchema)

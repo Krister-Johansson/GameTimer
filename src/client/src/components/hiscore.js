@@ -1,34 +1,63 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
+import { w3cwebsocket as W3CWebSocket } from 'websocket'
+
+const client = new W3CWebSocket('ws://127.0.0.1:5000')
 
 export default class Hiscore extends Component {
     constructor(props) {
         super(props)
+
         this.state = {
             hiscore: null,
         }
+
+        this.updateHiscore = this.updateHiscore.bind(this);
+        this.generateCrown = this.generateCrown.bind(this)
     }
+
     componentDidMount() {
-        fetch('http://localhost:3000/api/hiscore?top=10')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ hiscore: data })
-            })
+        this.updateHiscore()
+
+        client.onopen = () => {
+            console.log('WebSocket Client Connected')
+        }
+
+        client.onmessage = message => {
+            const dataFromServer = JSON.parse(message.data)
+
+            switch (dataFromServer.eventType) {
+                case 'update':
+                    this.updateHiscore()
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
+    updateHiscore = () =>{
+        fetch('/api/hiscore?top=10')
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ hiscore: data })
+        })
     }
 
     generateCrown = place => {
-        if (place > 3) return place
+        if (place > 2) return place
 
         let crown = 'goldCrown'
         switch (place) {
-            case 1:
+            case 0:
                 crown = 'goldCrown'
                 break
-            case 2:
+            case 1:
                 crown = 'silverCrown'
                 break
-            case 3:
+            case 2:
                 crown = 'bronzeCrown'
                 break
             default:
@@ -53,7 +82,6 @@ export default class Hiscore extends Component {
                             <thead>
                                 {admin ? (
                                     <tr>
-                                        <th align="center"></th>
                                         <th></th>
                                         <th>Name</th>
                                         <th>Time</th>
@@ -63,7 +91,6 @@ export default class Hiscore extends Component {
                                     </tr>
                                 ) : (
                                     <tr>
-                                        <th align="center"></th>
                                         <th></th>
                                         <th>Name</th>
                                         <th>Time</th>
@@ -72,14 +99,11 @@ export default class Hiscore extends Component {
                             </thead>
                             <tbody>
                                 {admin
-                                    ? hiscore.map(player => (
-                                          <tr key={player.place}>
-                                              <td align="center">
-                                                  {this.generateCrown(
-                                                      player.place
-                                                  )}
+                                    ? hiscore.map((player, place) => (
+                                          <tr key={place}>
+                                              <td className="centerCrown">
+                                                  {this.generateCrown(place)}
                                               </td>
-                                              <td>{player.avatar}</td>
                                               <td>
                                                   <strong>{player.name}</strong>
                                               </td>
@@ -89,14 +113,11 @@ export default class Hiscore extends Component {
                                               <td>{player.company}</td>
                                           </tr>
                                       ))
-                                    : hiscore.map(player => (
-                                          <tr key={player.place}>
-                                              <td align="center">
-                                                  {this.generateCrown(
-                                                      player.place
-                                                  )}
+                                    : hiscore.map((player, place) => (
+                                          <tr key={place}>
+                                              <td className="centerCrown">
+                                                  {this.generateCrown(place)}
                                               </td>
-                                              <td>{player.avatar}</td>
                                               <td>
                                                   <strong>{player.name}</strong>
                                               </td>
