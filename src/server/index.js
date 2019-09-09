@@ -299,7 +299,7 @@ app.use((err, req, res, next) => {
         // probably you don't want to log unauthorized access
         // or do you?
     }
-    return res.status(500).json(err)
+    return res.status(err.output.statusCode).json(err.output.payload)
 })
 
 server.listen(process.env.PORT || 5001, () => {
