@@ -11,7 +11,7 @@ const http = require('http')
 const WebSocket = require('ws')
 const Gpio = require('onoff').Gpio
 
-const isTimerStarted = false
+let isTimerStarted = false
 
 const ledStart = new Gpio(22, 'out')
 const buttonStart = new Gpio(23, 'in', 'both')
@@ -41,6 +41,20 @@ app.use(
         saveUninitialized: false,
     })
 )
+let iv = null
+
+const updateLedStatus = ()=>{
+    if(isTimerStarted){
+        clearInterval(iv)
+        ledStart.writeSync(0)
+        ledStop.writeSync(1)
+        ledReset.writeSync(1)
+    }else{
+        ledStop.writeSync(0)
+        ledReset.writeSync(0)
+        iv = setInterval(_ => ledStart.writeSync(led.readSync() ^ 1), 200);
+    }
+}
 
 wss.on('connection', ws => {
     console.log('New connection!')
@@ -61,6 +75,7 @@ wss.on('connection', ws => {
             default:
                 break
         }
+        updateLedStatus()
     })
 })
 
@@ -289,6 +304,30 @@ app.use((err, req, res, next) => {
 
 server.listen(process.env.PORT || 5001, () => {
     console.log(`Server started on port ${server.address().port} :)`)
+})
+buttonStart.watch((err, value) => {
+    if (err) {
+        throw err
+    }
+
+    sendStatus('startTimer', true).then(z => {
+    })
+})
+buttonReset.watch((err, value) => {
+    if (err) {
+        throw err
+    }
+
+    sendStatus('resetTimer', true).then(z => {
+    })
+})
+buttonStop.watch((err, value) => {
+    if (err) {
+        throw err
+    }
+
+    sendStatus('stopTimer', true).then(z => {
+    })
 })
 
 process.on('SIGINT', () => {
