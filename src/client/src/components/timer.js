@@ -37,6 +37,7 @@ export default class Timer extends Component {
         client.onopen = () => {
             console.log('WebSocket Client Connected')
             this.sendStateToServer('gameTimer', false)
+            this.sendStateToServer('newPlayer', true)
         }
 
         client.onmessage = message => {

@@ -58,7 +58,7 @@ const updateLedStatus = ()=>{
 
 wss.on('connection', ws => {
     console.log('New connection!')
-    ledStart.writeSync(1)
+
     ws.on('message', message => {
         const { eventType, data } = JSON.parse(message)
         switch (eventType) {
@@ -71,7 +71,9 @@ wss.on('connection', ws => {
                     isTimerStarted = false
                 }
                 break
-
+                case 'newPlayer':
+                    isTimerStarted = false
+                    break;
             default:
                 break
         }
