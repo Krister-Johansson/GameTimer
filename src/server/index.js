@@ -41,18 +41,16 @@ app.use(
         saveUninitialized: false,
     })
 )
-let iv = null
 
 const updateLedStatus = () => {
     if (isTimerStarted) {
-        clearInterval(iv)
         ledStart.writeSync(0)
         ledStop.writeSync(1)
         ledReset.writeSync(1)
     } else {
         ledStop.writeSync(0)
         ledReset.writeSync(0)
-        iv = setInterval(_ => ledStart.writeSync(ledStart.readSync() ^ 1), 200)
+        ledStart.writeSync(1)
     }
 }
 
