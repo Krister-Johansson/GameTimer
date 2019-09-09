@@ -43,16 +43,16 @@ app.use(
 )
 let iv = null
 
-const updateLedStatus = ()=>{
-    if(isTimerStarted){
+const updateLedStatus = () => {
+    if (isTimerStarted) {
         clearInterval(iv)
         ledStart.writeSync(0)
         ledStop.writeSync(1)
         ledReset.writeSync(1)
-    }else{
+    } else {
         ledStop.writeSync(0)
         ledReset.writeSync(0)
-        iv = setInterval(_ => ledStart.writeSync(led.readSync() ^ 1), 200);
+        iv = setInterval(_ => ledStart.writeSync(led.readSync() ^ 1), 200)
     }
 }
 
@@ -71,9 +71,9 @@ wss.on('connection', ws => {
                     isTimerStarted = false
                 }
                 break
-                case 'newPlayer':
-                    isTimerStarted = false
-                    break;
+            case 'newPlayer':
+                isTimerStarted = false
+                break
             default:
                 break
         }
@@ -306,30 +306,31 @@ app.use((err, req, res, next) => {
 
 server.listen(process.env.PORT || 5001, () => {
     console.log(`Server started on port ${server.address().port} :)`)
+    updateLedStatus()
 })
+
 buttonStart.watch((err, value) => {
     if (err) {
         throw err
     }
 
-    sendStatus('startTimer', true).then(z => {
-    })
+    sendStatus('startTimer', true).then(z => {})
 })
+
 buttonReset.watch((err, value) => {
     if (err) {
         throw err
     }
 
-    sendStatus('resetTimer', true).then(z => {
-    })
+    sendStatus('resetTimer', true).then(z => {})
 })
+
 buttonStop.watch((err, value) => {
     if (err) {
         throw err
     }
 
-    sendStatus('stopTimer', true).then(z => {
-    })
+    sendStatus('stopTimer', true).then(z => {})
 })
 
 process.on('SIGINT', () => {
