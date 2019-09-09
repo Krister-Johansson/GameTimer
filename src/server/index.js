@@ -52,7 +52,7 @@ const updateLedStatus = () => {
     } else {
         ledStop.writeSync(0)
         ledReset.writeSync(0)
-        iv = setInterval(_ => ledStart.writeSync(led.readSync() ^ 1), 200)
+        iv = setInterval(_ => ledStart.writeSync(ledStart.readSync() ^ 1), 200)
     }
 }
 
