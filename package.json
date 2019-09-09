@@ -9,6 +9,7 @@
   "scripts": {
     "start": "electron ./src/index.js",
     "dev": "node ./src/server",
+    "rebuild": "electron-rebuild -f -w sqlite3",
     "sequelize-migrate": "./node_modules/sequelize-cli/lib/sequelize db:migrate"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "boom": "^7.3.0",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",
+    "electron-rebuild": "^1.8.6",
     "exceljs": "^2.0.1",
     "express": "^4.17.1",
     "express-boom": "^3.0.0",

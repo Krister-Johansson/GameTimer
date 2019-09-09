@@ -2,7 +2,7 @@
 const { app, BrowserWindow } = require('electron')
 
 require('./server')
-
+process.noAsar = true;
 let mainWindow
 
 const createWindow = () => {
@@ -13,10 +13,10 @@ const createWindow = () => {
     })
 
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3000')
+    mainWindow.loadURL('http://localhost:5001')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', () => {
