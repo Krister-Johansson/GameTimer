@@ -59,6 +59,8 @@ wss.on('connection', ws => {
 
 
 const sendStatus = (eventType, data) => {
+
+    console.log(eventType, data)
     return new Promise((resolve, reject) => {
         wss.clients.forEach(client => {
             client.send(JSON.stringify({ eventType, data }))
@@ -280,6 +282,7 @@ app.use((err, req, res, next) => {
     }
     return res.status(err.output.statusCode).json(err.output.payload)
 })
+
 server.listen(process.env.PORT || 5000, () => {
     console.log(`Server started on port ${server.address().port} :)`)
 })

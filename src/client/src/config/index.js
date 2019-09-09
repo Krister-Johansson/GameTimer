@@ -1,1 +1,1 @@
-export const config = { server: `127.0.0.1:${process.env.PORT}` };
+export const config = { server: `127.0.0.1:5000` };

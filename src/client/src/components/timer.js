@@ -8,7 +8,7 @@ import { config } from '../config';
 import logo from '../images/logo_web_big.svg'
 import BackgroundImage from '../images/bg.png'
 
-const client = new W3CWebSocket('ws://127.0.0.1:5000')
+const client = new W3CWebSocket(`ws://${config.server}`)
 
 export default class Timer extends Component {
     constructor(props) {
