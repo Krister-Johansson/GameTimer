@@ -9,16 +9,16 @@ const sgMail = require('@sendgrid/mail')
 const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
-// const Gpio = require('onoff').Gpio
+const Gpio = require('onoff').Gpio
 
-// const ledStart = new Gpio(22, 'out')
-// const buttonStart = new Gpio(23, 'in', 'falling', { debounceTimeout: 50 })
+const ledStart = new Gpio(22, 'out')
+const buttonStart = new Gpio(23, 'in', 'falling', { debounceTimeout: 50 })
 
-// const ledStop = new Gpio(24, 'out')
-// const buttonStop = new Gpio(25, 'in', 'falling', { debounceTimeout: 50 })
+const ledStop = new Gpio(24, 'out')
+const buttonStop = new Gpio(25, 'in', 'falling', { debounceTimeout: 50 })
 
-// const ledReset = new Gpio(26, 'out')
-// const buttonReset = new Gpio(27, 'in', 'falling', { debounceTimeout: 50 })
+const ledReset = new Gpio(26, 'out')
+const buttonReset = new Gpio(27, 'in', 'falling', { debounceTimeout: 50 })
 
 let isTimerStarted = false
 sgMail.setApiKey('')
@@ -42,15 +42,15 @@ app.use(
 )
 
 const updateLedStatus = () => {
-    // if (isTimerStarted) {
-    //     ledStart.writeSync(0)
-    //     ledStop.writeSync(1)
-    //     ledReset.writeSync(1)
-    // } else {
-    //     ledStop.writeSync(0)
-    //     ledReset.writeSync(0)
-    //     ledStart.writeSync(1)
-    // }
+    if (isTimerStarted) {
+        ledStart.writeSync(0)
+        ledStop.writeSync(1)
+        ledReset.writeSync(1)
+    } else {
+        ledStop.writeSync(0)
+        ledReset.writeSync(0)
+        ledStart.writeSync(1)
+    }
 }
 
 wss.on('connection', ws => {
@@ -294,7 +294,6 @@ app.get('*', (req, res) => {
 })
 
 app.use((err, req, res, next) => {
-    console.error(err)
     if (err.isServer) {
         // log the error...
         // probably you don't want to log unauthorized access
@@ -308,29 +307,29 @@ server.listen(process.env.PORT || 5001, () => {
     updateLedStatus()
 })
 
-// buttonStart.watch((err, value) => {
-//     if (err) {
-//         throw err
-//     }
+buttonStart.watch((err, value) => {
+    if (err) {
+        throw err
+    }
 
-//     sendStatus('startTimer', true)
-// })
+    sendStatus('startTimer', true)
+})
 
-// buttonReset.watch((err, value) => {
-//     if (err) {
-//         throw err
-//     }
+buttonReset.watch((err, value) => {
+    if (err) {
+        throw err
+    }
 
-//     sendStatus('resetTimer', true)
-// })
+    sendStatus('resetTimer', true)
+})
 
-// buttonStop.watch((err, value) => {
-//     if (err) {
-//         throw err
-//     }
+buttonStop.watch((err, value) => {
+    if (err) {
+        throw err
+    }
 
-//     sendStatus('stopTimer', true)
-// })
+    sendStatus('stopTimer', true)
+})
 
 process.on('SIGINT', () => {
     ledStart.unexport()

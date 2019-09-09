@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, shell } = require('electron')
 
 require('./server')
-process.noAsar = true;
+process.noAsar = true
 let mainWindow
 
 const createWindow = () => {
@@ -24,6 +24,16 @@ const createWindow = () => {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null
+    })
+    mainWindow.webContents.on('new-window', (e, url) => {
+        e.preventDefault()
+        console.log(url)
+        let child = new BrowserWindow({ show: false })
+child.loadURL(url)
+child.once('ready-to-show', () => {
+  child.show()
+})
+        // require('electron').shell.openExternal(url)
     })
 }
 
