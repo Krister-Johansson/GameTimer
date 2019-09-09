@@ -102,7 +102,8 @@ export default class Timer extends Component {
     }
 
     stopTimer() {
-        
+        this.setState({isOn: false})
+        clearInterval(this.timer)
         this.setUserTime()
     }
 

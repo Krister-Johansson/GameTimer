@@ -80,6 +80,7 @@ wss.on('connection', ws => {
 })
 
 const sendStatus = (eventType, data) => {
+    console.log(eventType, data)
     return new Promise((resolve, reject) => {
         wss.clients.forEach(client => {
             client.send(JSON.stringify({ eventType, data }))
@@ -328,7 +329,9 @@ buttonStop.watch((err, value) => {
         throw err
     }
 
-    sendStatus('stopTimer', true).then(z => {})
+    sendStatus('stopTimer', true).then(z => {
+        console.log(z)
+    })
 })
 
 process.on('SIGINT', () => {
