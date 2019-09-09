@@ -45,13 +45,20 @@ export default class Timer extends Component {
 
             switch (dataFromServer.eventType) {
                 case 'startTimer':
-                    this.startTimer()
+                        if(this.state.player != null){
+                            this.startTimer()
+                        }
                     break
                 case 'stopTimer':
-                    this.stopTimer()
+                    if(this.state.player != null){
+                        this.stopTimer()
+                    }
+                    
                     break
                 case 'resetTimer':
-                    this.resetTimer()
+                        if(this.state.player != null){
+                            this.resetTimer()
+                        }
                     break;
                 default:
                     break
