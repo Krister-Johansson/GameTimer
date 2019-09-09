@@ -3,7 +3,6 @@ const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const mongoose = require('mongoose')
 const boom = require('boom')
 const Excel = require('exceljs')
 const sgMail = require('@sendgrid/mail')
@@ -11,8 +10,7 @@ const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
 
-
-sgMail.setApiKey('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')
+sgMail.setApiKey('')
 
 const app = express()
 const server = http.createServer(app)

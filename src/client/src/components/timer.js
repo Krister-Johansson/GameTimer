@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 
+import { config } from '../config';
+
 import logo from '../images/logo_web_big.svg'
 import BackgroundImage from '../images/bg.png'
 
@@ -83,7 +85,7 @@ export default class Timer extends Component {
 
     setUserTime() {
         const { time } = this.state
-        fetch(`/api/user/${this.state.player.id}/time`, {
+        fetch(`http://${config.server}/api/user/${this.state.player.id}/time`, {
             method: 'POST',
             body: JSON.stringify({
                 time,
@@ -121,7 +123,7 @@ export default class Timer extends Component {
             player: null,
         })
         clearInterval(this.reloadTimer)
-        fetch(`/api/nextplayer`)
+        fetch(`http://${config.server}/api/nextplayer`)
             .then(response => response.json())
             .then(player => {
                 if (player == null) {
@@ -138,7 +140,7 @@ export default class Timer extends Component {
     }
 
     getLeader() {
-        fetch(`/api/leader`)
+        fetch(`http://${config.server}/api/leader`)
             .then(response => response.json())
             .then(leader => {
                 this.setState({

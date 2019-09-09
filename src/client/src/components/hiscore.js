@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
+import { config } from '../config';
 
-const client = new W3CWebSocket('ws://127.0.0.1:5000')
+const client = new W3CWebSocket(`ws://${config.server}`)
 
 export default class Hiscore extends Component {
     constructor(props) {
@@ -12,7 +13,6 @@ export default class Hiscore extends Component {
         this.state = {
             hiscore: null,
         }
-
         this.updateHiscore = this.updateHiscore.bind(this);
         this.generateCrown = this.generateCrown.bind(this)
     }
@@ -39,7 +39,7 @@ export default class Hiscore extends Component {
     }
 
     updateHiscore = () =>{
-        fetch('/api/hiscore?top=10')
+        fetch(`http://${config.server}/api/hiscore?top=10`)
         .then(response => response.json())
         .then(data => {
             this.setState({ hiscore: data })

@@ -3,6 +3,8 @@ import logo from '../images/logo_web_big.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
+import { config } from '../config';
+
 export default class Player extends Component {
     constructor(props) {
         super(props)
@@ -69,14 +71,14 @@ export default class Player extends Component {
     removeUser(id, name) {
         const confirm = window.confirm(`Vill du radera spelare: ${name}?`)
         if (confirm) {
-            fetch(`/api/user/${id}`, {
+            fetch(`http://${config.server}/api/user/${id}`, {
                 method: 'DELETE',
             }).then(res => this.fetchUsers())
         }
     }
 
     fetchUser(id) {
-        fetch(`/api/user/${id}`)
+        fetch(`http://${config.server}/api/user/${id}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
@@ -91,7 +93,7 @@ export default class Player extends Component {
     }
 
     fetchUsers() {
-        fetch('/api/user')
+        fetch(`http://${config.server}/api/user`)
             .then(response => response.json())
             .then(data => {
                 this.setState({ players: data })
