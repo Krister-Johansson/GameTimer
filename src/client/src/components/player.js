@@ -111,7 +111,7 @@ export default class Player extends Component {
             edit,
         } = this.state
 
-        fetch(`api/user${edit ? `/${userId}` : ''}`, {
+        fetch(`http://${config.server}/api/user${edit ? `/${userId}` : ''}`, {
             method: edit ? 'PUT' : 'POST',
             body: JSON.stringify({
                 company: companyField,
@@ -128,8 +128,6 @@ export default class Player extends Component {
                     res.json().then(b => {
                         alert(b.message)
                     })
-                } else {
-                    return res.json()
                 }
             })
             .then(response => {

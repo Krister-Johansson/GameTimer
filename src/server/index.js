@@ -9,19 +9,24 @@ const sgMail = require('@sendgrid/mail')
 const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
+const Gpio = require('onoff').Gpio
+
+const isTimerStarted = false
+
+const ledStart = new Gpio(22, 'out')
+const buttonStart = new Gpio(23, 'in', 'both')
+
+const ledStop = new Gpio(24, 'out')
+const buttonStop = new Gpio(25, 'in', 'both')
+
+const ledReset = new Gpio(26, 'out')
+const buttonReset = new Gpio(27, 'in', 'both')
 
 sgMail.setApiKey('')
 
 const app = express()
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
-
-wss.on('connection', ws => {
-    ws.on('message', message => {
-        console.log('received: %s', message)
-    })
-})
-
 
 const user = require('./util/user')
 
@@ -39,15 +44,17 @@ app.use(
 
 wss.on('connection', ws => {
     console.log('New connection!')
-
+    ledStart.writeSync(1)
     ws.on('message', message => {
         const { eventType, data } = JSON.parse(message)
         switch (eventType) {
             case 'gameTimer':
                 if (data) {
                     console.log('Timer startade')
+                    isTimerStarted = true
                 } else {
                     console.log('Timer stopad!')
+                    isTimerStarted = false
                 }
                 break
 
@@ -57,10 +64,7 @@ wss.on('connection', ws => {
     })
 })
 
-
 const sendStatus = (eventType, data) => {
-
-    console.log(eventType, data)
     return new Promise((resolve, reject) => {
         wss.clients.forEach(client => {
             client.send(JSON.stringify({ eventType, data }))
@@ -283,6 +287,15 @@ app.use((err, req, res, next) => {
     return res.status(err.output.statusCode).json(err.output.payload)
 })
 
-server.listen(process.env.PORT || 5000, () => {
+server.listen(process.env.PORT || 5001, () => {
     console.log(`Server started on port ${server.address().port} :)`)
+})
+
+process.on('SIGINT', () => {
+    ledStart.unexport()
+    buttonStart.unexport()
+    ledStop.unexport()
+    buttonStop.unexport()
+    ledReset.unexport()
+    buttonReset.unexport()
 })
