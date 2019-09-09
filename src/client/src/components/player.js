@@ -80,7 +80,7 @@ export default class Player extends Component {
             .then(response => response.json())
             .then(data => {
                 this.setState({
-                    userId: data._id,
+                    userId: data.id,
                     companyField: data.company,
                     nameField: data.name,
                     emailField: data.email,
@@ -294,7 +294,7 @@ export default class Player extends Component {
                             <tbody>
                                 {players
                                     ? players.map(player => (
-                                          <tr key={player._id}>
+                                          <tr key={player.id}>
                                               <td>{player.company}</td>
                                               <td>{player.name}</td>
                                               <td>{player.time}</td>
@@ -305,7 +305,7 @@ export default class Player extends Component {
                                                       className="button button-clear"
                                                       onClick={() => {
                                                           this.fetchUser(
-                                                              player._id
+                                                              player.id
                                                           )
                                                       }}
                                                   >
@@ -319,7 +319,7 @@ export default class Player extends Component {
                                                       className="button button-clear"
                                                       onClick={() => {
                                                           this.removeUser(
-                                                              player._id,
+                                                              player.id,
                                                               player.name
                                                           )
                                                       }}

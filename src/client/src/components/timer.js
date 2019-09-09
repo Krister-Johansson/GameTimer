@@ -83,7 +83,7 @@ export default class Timer extends Component {
 
     setUserTime() {
         const { time } = this.state
-        fetch(`/api/user/${this.state.player._id}/time`, {
+        fetch(`/api/user/${this.state.player.id}/time`, {
             method: 'POST',
             body: JSON.stringify({
                 time,

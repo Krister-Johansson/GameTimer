@@ -11,7 +11,8 @@ const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
 
-sgMail.setApiKey('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')
+
+sgMail.setApiKey('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')
 
 const app = express()
 const server = http.createServer(app)
@@ -23,13 +24,6 @@ wss.on('connection', ws => {
     })
 })
 
-mongoose.connect('mongodb://localhost:27017/gametimer', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-})
-
-var db = mongoose.connection
 
 const user = require('./util/user')
 
@@ -65,14 +59,6 @@ wss.on('connection', ws => {
     })
 })
 
-// setInterval(() => {
-//     wss.clients.forEach(ws => {
-//         if (!ws.isAlive) return ws.terminate()
-
-//         ws.isAlive = false
-//         ws.ping(null, false, true)
-//     })
-// }, 10000)
 
 const sendStatus = (eventType, data) => {
     return new Promise((resolve, reject) => {
@@ -133,7 +119,7 @@ app.post('/api/user', (req, res, next) => {
 
     user.create(name, email, phone, company)
         .then(x => {
-            res.json(x)
+            res.sendStatus(200)
         })
         .catch(err => {
             if (err.code === 11000) {
@@ -152,7 +138,7 @@ app.put('/api/user/:id', (req, res, next) => {
             if (x === null) {
                 return next(boom.notFound('Kan inte hitta användaren'))
             }
-            res.json(x)
+            res.sendStatus(200)
         })
         .catch(err => {
             return next(boom.badRequest(err))
@@ -248,7 +234,6 @@ app.post('/api/export', (req, res, next) => {
                     time: data.time,
                 }
             })
-
             worksheet.addRows(result)
 
             workbook.xlsx
@@ -258,7 +243,7 @@ app.post('/api/export', (req, res, next) => {
                     const content = Buffer.from(file).toString('base64')
                     const msg = {
                         to,
-                        from: process.env.fromEmail,
+                        from: 'krister.johansson86@outlook.com',
                         subject: 'Resultat från GameTime',
                         text: 'Se bifogad fil',
                         attachments: [
