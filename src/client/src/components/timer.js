@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
-
+import ms from 'pretty-ms'
 import { config } from '../config';
 
 import logo from '../images/logo_web_big.svg'
@@ -18,8 +18,9 @@ export default class Timer extends Component {
             player: null,
             leader: null,
             isOn: false,
-            start: 0,
+            start: 0
         }
+
         this.timer = null
         this.reloadTimer = null
 
@@ -48,17 +49,19 @@ export default class Timer extends Component {
                         if(this.state.player != null){
                             this.startTimer()
                         }
+                        console.log(this.timer)
                     break
                 case 'stopTimer':
                     if(this.state.player != null){
                         this.stopTimer()
                     }
-                    
+                    console.log(this.timer)
                     break
                 case 'resetTimer':
                         if(this.state.player != null){
                             this.resetTimer()
                         }
+                        console.log(this.timer)
                     break;
                 default:
                     break
@@ -91,8 +94,7 @@ export default class Timer extends Component {
         )
     }
 
-    setUserTime() {
-        const { time } = this.state
+    setUserTime(time) {
         fetch(`http://${config.server}/api/user/${this.state.player.id}/time`, {
             method: 'POST',
             body: JSON.stringify({
@@ -103,34 +105,25 @@ export default class Timer extends Component {
             },
         }).then(x => {
             this.getNextPlayer()
-            this.resetTimer()
             this.getLeader()
         })
     }
 
     stopTimer() {
-        console.log(this.timer)
-        this.setState({isOn: false})
-        clearInterval(this.timer)
-        this.timer = false
-        this.setUserTime()
-        console.log(this.timer)
+        const { time } = this.state
+        this.resetTimer()
+        this.setUserTime(time)
+        
     }
 
     resetTimer() {
         this.sendStateToServer('gameTimer', false)
         this.setState({ time: 0, isOn: false })
-        console.log(this.timer)
         clearInterval(this.timer)
-        this.timer = false
-        console.log(this.timer)
     }
 
     parsTime(time) {
-        if (time > 1000) {
-            return (time / 1000).toFixed(2)
-        }
-        return time
+        return ms(time)
     }
 
     getNextPlayer() {
