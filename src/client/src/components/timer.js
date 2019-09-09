@@ -109,15 +109,21 @@ export default class Timer extends Component {
     }
 
     stopTimer() {
+        console.log(this.timer)
         this.setState({isOn: false})
         clearInterval(this.timer)
+        this.timer = false
         this.setUserTime()
+        console.log(this.timer)
     }
 
     resetTimer() {
         this.sendStateToServer('gameTimer', false)
         this.setState({ time: 0, isOn: false })
+        console.log(this.timer)
         clearInterval(this.timer)
+        this.timer = false
+        console.log(this.timer)
     }
 
     parsTime(time) {

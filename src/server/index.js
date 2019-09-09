@@ -11,8 +11,6 @@ const http = require('http')
 const WebSocket = require('ws')
 const Gpio = require('onoff').Gpio
 
-let isTimerStarted = false
-
 const ledStart = new Gpio(22, 'out')
 const buttonStart = new Gpio(23, 'in', 'both')
 
@@ -22,6 +20,7 @@ const buttonStop = new Gpio(25, 'in', 'both')
 const ledReset = new Gpio(26, 'out')
 const buttonReset = new Gpio(27, 'in', 'both')
 
+let isTimerStarted = false
 sgMail.setApiKey('')
 
 const app = express()
