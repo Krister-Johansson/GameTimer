@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import ms from 'pretty-ms'
-import { config } from '../config';
+import { config } from '../config'
 
 import logo from '../images/logo_web_big.svg'
 import BackgroundImage from '../images/bg.png'
@@ -18,7 +18,7 @@ export default class Timer extends Component {
             player: null,
             leader: null,
             isOn: false,
-            start: 0
+            start: 0,
         }
 
         this.timer = null
@@ -46,23 +46,23 @@ export default class Timer extends Component {
 
             switch (dataFromServer.eventType) {
                 case 'startTimer':
-                        if(this.state.player != null){
-                            this.startTimer()
-                        }
-                        console.log(this.timer)
+                    if (this.state.player != null) {
+                        this.startTimer()
+                    }
+                    console.log(this.timer)
                     break
                 case 'stopTimer':
-                    if(this.state.player != null){
+                    if (this.state.player != null) {
                         this.stopTimer()
                     }
                     console.log(this.timer)
                     break
                 case 'resetTimer':
-                        if(this.state.player != null){
-                            this.resetTimer()
-                        }
-                        console.log(this.timer)
-                    break;
+                    if (this.state.player != null) {
+                        this.resetTimer()
+                    }
+                    console.log(this.timer)
+                    break
                 default:
                     break
             }
@@ -113,17 +113,21 @@ export default class Timer extends Component {
         const { time } = this.state
         this.resetTimer()
         this.setUserTime(time)
-        
     }
 
     resetTimer() {
         this.sendStateToServer('gameTimer', false)
-        this.setState({ time: 0, isOn: false })
+        this.setState({ isOn: false })
+        this.setState({ time: 0 })
+        
         clearInterval(this.timer)
     }
 
     parsTime(time) {
-        return ms(time)
+        return ms(time, {
+            keepDecimalsOnWholeSeconds: true,
+            secondsDecimalDigits: 2,
+        })
     }
 
     getNextPlayer() {

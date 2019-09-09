@@ -12,13 +12,13 @@ const WebSocket = require('ws')
 const Gpio = require('onoff').Gpio
 
 const ledStart = new Gpio(22, 'out')
-const buttonStart = new Gpio(23, 'in', 'both')
+const buttonStart = new Gpio(23, 'in', 'falling', { debounceTimeout: 50 })
 
 const ledStop = new Gpio(24, 'out')
-const buttonStop = new Gpio(25, 'in', 'both')
+const buttonStop = new Gpio(25, 'in', 'falling', { debounceTimeout: 50 })
 
 const ledReset = new Gpio(26, 'out')
-const buttonReset = new Gpio(27, 'in', 'both')
+const buttonReset = new Gpio(27, 'in', 'falling', { debounceTimeout: 50 })
 
 let isTimerStarted = false
 sgMail.setApiKey('')
