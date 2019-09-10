@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import logo from '../images/logo_web_big.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
-
+// import { ValidatorForm } from 'react-form-validator-core';
+import TextValidator from './textValidator'
 import { config } from '../config';
 
 export default class Player extends Component {
@@ -214,6 +215,7 @@ export default class Player extends Component {
                                             name="companyField"
                                             value={this.state.companyField}
                                             onChange={this.handleChange}
+                                            required
                                         />
                                         <label htmlFor="nameField">Name</label>
                                         <input
@@ -223,24 +225,26 @@ export default class Player extends Component {
                                             name="nameField"
                                             value={this.state.nameField}
                                             onChange={this.handleChange}
+                                            required
                                         />
                                         <label htmlFor="emailField">
                                             E-Post
                                         </label>
                                         <input
-                                            type="text"
+                                            type="email"
                                             placeholder="E-Post"
                                             id="emailField"
                                             name="emailField"
                                             disabled={edit}
                                             value={this.state.emailField}
                                             onChange={this.handleChange}
+                                            required
                                         />
                                         <label htmlFor="phoneField">
                                             Telefon
                                         </label>
                                         <input
-                                            type="text"
+                                            type="tel"
                                             placeholder="Telefon"
                                             id="phoneField"
                                             name="phoneField"
