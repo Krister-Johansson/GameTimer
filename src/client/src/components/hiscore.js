@@ -15,6 +15,7 @@ export default class Hiscore extends Component {
         }
         this.updateHiscore = this.updateHiscore.bind(this);
         this.generateCrown = this.generateCrown.bind(this)
+        this.parsTime = this.parsTime.bind(this)
     }
 
     componentDidMount() {
@@ -31,19 +32,30 @@ export default class Hiscore extends Component {
                 case 'update':
                     this.updateHiscore()
                     break;
-            
+
                 default:
                     break;
             }
         }
     }
+    parsTime(duration) {
+        var milliseconds = parseInt((duration % 1000) / 100)
+            , seconds = parseInt((duration / 1000) % 60)
+            , minutes = parseInt((duration / (1000 * 60)) % 60)
+            , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-    updateHiscore = () =>{
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return minutes + ":" + seconds + ":" + milliseconds;
+    }
+    updateHiscore = () => {
         fetch(`http://${config.server}/api/hiscore?top=10`)
-        .then(response => response.json())
-        .then(data => {
-            this.setState({ hiscore: data })
-        })
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ hiscore: data })
+            })
     }
 
     generateCrown = place => {
@@ -90,40 +102,42 @@ export default class Hiscore extends Component {
                                         <th>Company</th>
                                     </tr>
                                 ) : (
-                                    <tr>
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th>Time</th>
-                                    </tr>
-                                )}
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Company</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    )}
                             </thead>
                             <tbody>
                                 {admin
                                     ? hiscore.map((player, place) => (
-                                          <tr key={place}>
-                                              <td className="centerCrown">
-                                                  {this.generateCrown(place)}
-                                              </td>
-                                              <td>
-                                                  <strong>{player.name}</strong>
-                                              </td>
-                                              <td>{player.time}</td>
-                                              <td>{player.email}</td>
-                                              <td>{player.phone}</td>
-                                              <td>{player.company}</td>
-                                          </tr>
-                                      ))
+                                        <tr key={place}>
+                                            <td className="centerCrown">
+                                                {this.generateCrown(place)}
+                                            </td>
+                                            <td>
+                                                <strong>{player.name}</strong>
+                                            </td>
+                                            <td>{this.parsTime(player.time)}</td>
+                                            <td>{player.email}</td>
+                                            <td>{player.phone}</td>
+                                            <td>{player.company}</td>
+                                        </tr>
+                                    ))
                                     : hiscore.map((player, place) => (
-                                          <tr key={place}>
-                                              <td className="centerCrown">
-                                                  {this.generateCrown(place)}
-                                              </td>
-                                              <td>
-                                                  <strong>{player.name}</strong>
-                                              </td>
-                                              <td>{player.time}</td>
-                                          </tr>
-                                      ))}
+                                        <tr key={place}>
+                                            <td className="centerCrown">
+                                                {this.generateCrown(place)}
+                                            </td>
+                                            <td>
+                                                <strong>{player.name}</strong>
+                                            </td>
+                                            <td>Company</td>
+                                            <td>{this.parsTime(player.time)}</td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     </div>

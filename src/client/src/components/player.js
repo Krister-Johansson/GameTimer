@@ -24,6 +24,7 @@ export default class Player extends Component {
         this.fetchUser = this.fetchUser.bind(this)
         this.cancelEdit = this.cancelEdit.bind(this)
         this.removeUser = this.removeUser.bind(this)
+        this.parsTime = this.parsTime.bind(this)
     }
 
     componentDidMount() {
@@ -40,6 +41,18 @@ export default class Player extends Component {
             edit: false,
         })
     }
+    parsTime(duration) {
+        var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60))%24);
+    
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+    
+        return minutes + ":" + seconds + ":" + milliseconds;
+}
 
     exportUsers() {
         const to = prompt('Ange en E-post för att expotera listan till')
@@ -234,20 +247,6 @@ export default class Player extends Component {
                                             value={this.state.phoneField}
                                             onChange={this.handleChange}
                                         />
-
-                                        {/* <div className="float-right">
-                                            <input
-                                                type="checkbox"
-                                                id="confirmField"
-                                                name="confirmField"
-                                            />
-                                            <label
-                                                className="label-inline"
-                                                htmlFor="confirmField"
-                                            >
-                                                Send a SMS
-                                            </label>
-                                        </div> */}
                                         <div className="row">
                                             <div className="column">
                                                 <input
@@ -297,7 +296,7 @@ export default class Player extends Component {
                                           <tr key={player.id}>
                                               <td>{player.company}</td>
                                               <td>{player.name}</td>
-                                              <td>{player.time}</td>
+                                              <td>{this.parsTime(player.time)}</td>
                                               <td>{player.email}</td>
                                               <td>{player.phone}</td>
                                               <td>

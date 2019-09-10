@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown } from '@fortawesome/free-solid-svg-icons'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
-import ms from 'pretty-ms'
-import { config } from '../config'
 
-import logo from '../images/logo_web_big.svg'
-import BackgroundImage from '../images/bg.png'
+import { config } from '../config'
 
 const client = new W3CWebSocket(`ws://${config.server}`)
 
@@ -123,11 +120,17 @@ export default class Timer extends Component {
         clearInterval(this.timer)
     }
 
-    parsTime(time) {
-        return ms(time, {
-            keepDecimalsOnWholeSeconds: true,
-            secondsDecimalDigits: 2,
-        })
+    parsTime(duration) {
+            var milliseconds = parseInt((duration%1000)/10)
+                , seconds = parseInt((duration/1000)%60)
+                , minutes = parseInt((duration/(1000*60))%60)
+                , hours = parseInt((duration/(1000*60*60))%24);
+        
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+        
+            return minutes + ":" + seconds + ":" + milliseconds;
     }
 
     getNextPlayer() {
@@ -165,7 +168,7 @@ export default class Timer extends Component {
         const { player, leader, time } = this.state
 
         const sectionStyle = {
-            backgroundImage: `url(${BackgroundImage})`,
+            backgroundImage: `url('/images/background.png')`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
         }
@@ -201,7 +204,7 @@ export default class Timer extends Component {
                     <section className="container">
                         <div className="row row-center ">
                             <div className="column center">
-                                <p>Designed with ♥ by Flexmatic</p>
+                                <p>Designed with ♥ by LEDtec</p>
                             </div>
                             <div className="column center">
                                 {leader !== null ? (
@@ -217,14 +220,14 @@ export default class Timer extends Component {
                                         </div>
                                         <div className="row">
                                             <div className="column">
-                                                <h1>{leader.time / 1000}</h1>
+                                                <h1>{this.parsTime(leader.time)}</h1>
                                             </div>
                                         </div>
                                     </div>
                                 ) : null}
                             </div>
                             <div className="column center">
-                                <img src={logo} alt="" />
+                                <img src="/images/logo.png" alt="" />
                             </div>
                         </div>
                     </section>

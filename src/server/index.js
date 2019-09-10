@@ -9,7 +9,31 @@ const sgMail = require('@sendgrid/mail')
 const fs = require('fs')
 const http = require('http')
 const WebSocket = require('ws')
+const multer = require('multer')
+const sendmail = require('sendmail')();
 const Gpio = require('onoff').Gpio
+
+const storageLogo = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, './src/server/public/images');
+    },
+    filename: (req, file, callback) => {
+        const re = /(?:\.([^.]+))?$/;
+        callback(null, `logo.png`);
+    }
+})
+const storageBackground = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, './src/server/public/images');
+    },
+    filename: (req, file, callback) => {
+        const re = /(?:\.([^.]+))?$/;
+        callback(null, `background.png`);
+    }
+})
+
+var uploadLogo = multer({ storage: storageLogo }).single('file')
+var uploadBackground = multer({ storage: storageBackground }).single('file')
 
 const ledStart = new Gpio(22, 'out')
 const buttonStart = new Gpio(23, 'in', 'falling', { debounceTimeout: 50 })
@@ -33,13 +57,11 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use(
-    session({
+app.use(session({
         secret: 'helloWorld',
         resave: true,
         saveUninitialized: false,
-    })
-)
+}))
 
 const updateLedStatus = () => {
     if (isTimerStarted) {
@@ -79,7 +101,6 @@ wss.on('connection', ws => {
 })
 
 const sendStatus = (eventType, data) => {
-    console.log(eventType, data)
     return new Promise((resolve, reject) => {
         wss.clients.forEach(client => {
             client.send(JSON.stringify({ eventType, data }))
@@ -89,6 +110,30 @@ const sendStatus = (eventType, data) => {
 }
 
 app.use(express.static(path.join(__dirname, '../client/build')))
+app.use('/images', express.static(path.join(__dirname, './public/images')))
+
+app.post('/api/upload/logo', (req, res, next) => {
+    uploadLogo(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        return res.status(200).send(req.file)
+
+    })
+})
+app.post('/api/upload/background', (req, res, next) => {
+    uploadBackground(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        return res.status(200).send(req.file)
+
+    })
+})
 
 app.get('/api/user', (req, res, next) => {
     user.list()
@@ -294,6 +339,7 @@ app.get('*', (req, res) => {
 })
 
 app.use((err, req, res, next) => {
+    console.error(err)
     if (err.isServer) {
         // log the error...
         // probably you don't want to log unauthorized access
