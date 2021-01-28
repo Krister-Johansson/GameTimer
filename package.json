@@ -13,7 +13,7 @@
     "sequelize-migrate": "./node_modules/sequelize-cli/lib/sequelize db:migrate"
   },
   "devDependencies": {
-    "electron": "^6.0.7",
+    "electron": "^9.4.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0"
